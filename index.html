@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Circuit Tracks Notation App</title>
+        <script src="script.js" defer></script>
+
+        <style>
+            body {
+                background-color:#2c363c;
+            }
+            .macro-button {
+                padding: 1.25rem; /* Button size in rem */
+                background-color: #183480; /* Button color */
+                border: none; /* No border */
+                border-radius: 0.3125rem; /* Rounded corners in rem */
+                color: white; /* Text color */
+                font-size: 0.875rem; /* Text size in rem */
+                cursor: pointer; /* Cursor to pointer to indicate it's clickable */
+            }
+            .macros-grid{
+                display: grid;
+                grid-template-columns: repeat(3, 2fr); /* Creates 2 columns */
+                gap: 0.3125rem; /* Spacing between buttons in rem */
+                margin: 0.3125rem; /* Margin around the grid in rem */   
+                 
+            }
+            .button-grid {
+                display: grid;
+                grid-template-columns: repeat(8, 1fr); /* Creates 8 columns */
+                gap: 0.3125rem; /* Spacing between buttons in rem */
+                margin: 1.25rem; /* Margin around the grid in rem */
+            }
+            .channel-button {
+                padding: 1.25rem; /* Button size in rem */
+                background-color: #188056; /* Button color */
+                border: none; /* No border */
+                border-radius: 0.3125rem; /* Rounded corners in rem */
+                color: white; /* Text color */
+                font-size: 0.875rem; /* Text size in rem */
+                cursor: pointer; /* Cursor to pointer to indicate it's clickable */
+            }
+            .grid-button {
+                padding: 1.25rem; /* Button size in rem */
+                background-color: #565656; /* Button color */
+                border: none; /* No border */
+                border-radius: 0.3125rem; /* Rounded corners in rem */
+                color: white; /* Text color */
+                font-size: 0.875rem; /* Text size in rem */
+                cursor: pointer; /* Cursor to pointer to indicate it's clickable */
+            }
+            .grid-button:active {
+                background-color: #aeaeae; /* Button color when active/pressed */
+            }
+            .grid-button:active {
+                background-color: #aeaeae; /* Button color when active/pressed */
+            }
+            
+        </style>
+    </head>
+    <body>
+
+        <input type="text" id="input-preset-1" value="Preset 1">
+            <button onclick="editPadName(1)">Save</button>
+
+        <div class="macros-grid">
+            <button class="macro-button" id="projectBtn">Project</button>
+            <button class="macro-button" id="presetsBtn">Presets</button>
+            <button class="macro-button" id="patternsBtn">Patterns</button>
+            <button class="macro-button" id="prevPageBtn">← Prev Page</button>
+            <button class="macro-button" id="currentPageDisplay">Current page: 1</button>
+            <button class="macro-button" id="nextPageBtn">Next Page →</button>
+        </div>
+    <!-- Button Grid for Pads -->
+        <div class="button-grid">
+            <!-- Row 1 -->
+            <button class="grid-button" id="pad-1">1</button>
+            <button class="grid-button" id="pad-2">2</button>
+            <button class="grid-button" id="pad-3">3</button>
+            <button class="grid-button" id="pad-4">4</button>
+            <button class="grid-button" id="pad-5">5</button>
+            <button class="grid-button" id="pad-6">6</button>
+            <button class="grid-button" id="pad-7">7</button>
+            <button class="grid-button" id="pad-8">8</button>
+            <!-- Row 2 -->
+            <button class="grid-button" id="pad-9">9</button>
+            <button class="grid-button" id="pad-10">10</button>
+            <button class="grid-button" id="pad-11">11</button>
+            <button class="grid-button" id="pad-12">12</button>
+            <button class="grid-button" id="pad-13">13</button>
+            <button class="grid-button" id="pad-14">14</button>
+            <button class="grid-button" id="pad-15">15</button>
+            <button class="grid-button" id="pad-16">16</button>
+            <!-- Row 3 -->
+            <button class="grid-button" id="pad-17">17</button>
+            <button class="grid-button" id="pad-18">18</button>
+            <button class="grid-button" id="pad-19">19</button>
+            <button class="grid-button" id="pad-20">20</button>
+            <button class="grid-button" id="pad-21">21</button>
+            <button class="grid-button" id="pad-22">22</button>
+            <button class="grid-button" id="pad-23">23</button>
+            <button class="grid-button" id="pad-24">24</button>
+            <!-- Row 4 -->
+            <button class="grid-button" id="pad-25">25</button>
+            <button class="grid-button" id="pad-26">26</button>
+            <button class="grid-button" id="pad-27">27</button>
+            <button class="grid-button" id="pad-28">28</button>
+            <button class="grid-button" id="pad-29">29</button>
+            <button class="grid-button" id="pad-30">30</button>
+            <button class="grid-button" id="pad-31">31</button>
+            <button class="grid-button" id="pad-32">32</button>
+        </div>
+    </body>
+</html>
