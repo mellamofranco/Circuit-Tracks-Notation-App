@@ -6,9 +6,6 @@ let selectedPad = null;
 let lastChannelClicked = 'synth1';
 let project = 'data_(1).json'
 
-
-
-
 // Load JSON data
 function loadData() {
     fetch(project)
@@ -22,13 +19,34 @@ function loadData() {
 
 // Initialize the app
 function initApp() {
-    setMacro('presets'); // This will also update the button names and apply highlighting
-    
-    // Set up event listeners for buttons
+    setMacro('presets');
+
+    // Event listeners for buttons
     document.getElementById('presetsBtn').addEventListener('click', () => setMacro('presets'));
     document.getElementById('patternsBtn').addEventListener('click', () => setMacro('patterns'));
     document.getElementById('prevPageBtn').addEventListener('click', () => setPage(currentPage - 1));
     document.getElementById('nextPageBtn').addEventListener('click', () => setPage(currentPage + 1));
+
+    document.getElementById('projectBtn').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    Data = JSON.parse(e.target.result);
+                    console.log("Project data loaded:", Data); // Log the loaded data
+                    updateButtonNames(); // Update the button names with the new data
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+    });
 
     const channelButtons = document.querySelectorAll('.channel-button');
     channelButtons.forEach(button => {
@@ -37,6 +55,8 @@ function initApp() {
         });
     });
 }
+
+// Rest of the functions (selectChannel, selectPad, editPadName, etc.)
 
 // Call loadData when the DOM content is loaded
 document.addEventListener('DOMContentLoaded', loadData);

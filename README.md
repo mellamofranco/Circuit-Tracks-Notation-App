@@ -30,3 +30,7 @@ Contributions to the Circuit Tracks Notation App are welcome. Please feel free t
 ## License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
+
+
+## Python local server comand
+ python -m http.server 8080 --bind 192.168.88.61[yourip]
