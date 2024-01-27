@@ -1,22 +1,26 @@
-// Global state variables
-let currentMacro = 'presets'; // Default starting macro
-let currentChannel = 'synth1'; // Default starting channel
-let currentPage = 1; // Default starting page
-let Data = {}; // Object to store JSON data
-let selectedPad = null; // To keep track of the currently selected pad
-let lastChannelClicked = "synth1"; // This will store the last channel clicked
+let Data = {}; // Initially empty
+let currentMacro = 'presets';
+let currentChannel = 'synth1';
+let currentPage = 1;
+let selectedPad = null;
+let lastChannelClicked = 'synth1';
 
-// Load json
-fetch('data.json')
-  .then(response => response.json())
-  .then(data => {
-    Data = data;
-    updateButtonNames();
-  })
-  .catch(error => console.error('Error loading JSON data:', error));
+// Load JSON data
+function loadData() {
+    fetch('data.json')
+        .then(response => response.json())
+        .then(data => {
+            Data = data;
+            initApp(); // Initialize the app after data is loaded
+        })
+        .catch(error => console.error('Error loading JSON data:', error));
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Event listeners for macro, channel, and page buttons
+// Initialize the app
+function initApp() {
+    setMacro('presets'); // This will also update the button names and apply highlighting
+    
+    // Set up event listeners for buttons
     document.getElementById('presetsBtn').addEventListener('click', () => setMacro('presets'));
     document.getElementById('patternsBtn').addEventListener('click', () => setMacro('patterns'));
     document.getElementById('prevPageBtn').addEventListener('click', () => setPage(currentPage - 1));
@@ -28,7 +32,10 @@ document.addEventListener('DOMContentLoaded', function() {
             selectChannel(this.id.replace('channel-', ''));
         });
     });
-});
+}
+
+// Call loadData when the DOM content is loaded
+document.addEventListener('DOMContentLoaded', loadData);
 
 function selectChannel(channel) {
     lastChannelClicked = channel;
@@ -96,12 +103,30 @@ function copyDataToClipboard() {
 function setMacro(macro) {
     currentMacro = macro;
     updateButtonNames();
+
+    const presetsBtn = document.getElementById('presetsBtn');
+    const patternsBtn = document.getElementById('patternsBtn');
+
+    if (currentMacro === 'presets') {
+        presetsBtn.classList.add('highlight');
+        patternsBtn.classList.remove('highlight');
+    } else if (currentMacro === 'patterns') {
+        patternsBtn.classList.add('highlight');
+        presetsBtn.classList.remove('highlight');
+    }
 }
 
 function setPage(page) {
     if (page >= 1 && page <= 2) {
         currentPage = page;
         updateButtonNames();
-        document.getElementById('currentPageDisplay').textContent = `Current page: ${page}`;
+        const currentPageDisplay = document.getElementById('currentPageDisplay');
+        currentPageDisplay.textContent = `Current page: ${page}`;
+
+        if (currentPage === 2) {
+            currentPageDisplay.classList.add('page-active');
+        } else {
+            currentPageDisplay.classList.remove('page-active');
+        }
     }
 }
