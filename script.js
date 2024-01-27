@@ -4,10 +4,13 @@ let currentChannel = 'synth1';
 let currentPage = 1;
 let selectedPad = null;
 let lastChannelClicked = 'synth1';
+let project = 'data_(1).json'
+
+
 
 // Load JSON data
 function loadData() {
-    fetch('data.json')
+    fetch(project)
         .then(response => response.json())
         .then(data => {
             Data = data;
