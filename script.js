@@ -2,24 +2,24 @@
 let currentMacro = 'presets'; // Default starting macro
 let currentChannel = 'synth1'; // Default starting channel
 let currentPage = 1; // Default starting page
-let padData = {}; // Object to store JSON data
+let Data = {}; // Object to store JSON data
 
 
-fetch('pad_names.json')
+fetch('data.json')
   .then(response => response.json())
   .then(data => {
-    padData = data;
-    // Now padData contains your JSON data
+    Data = data;
+    // Now Data contains your JSON data
     // Implement logic to display this data on your web page
   })
   .catch(error => console.error('Error loading JSON data:', error));
 
 document.addEventListener('DOMContentLoaded', function() {
     // Fetch and store the JSON data
-    fetch('pad_names.json') // Adjust the path if necessary
+    fetch('data.json') // Adjust the path if necessary
         .then(response => response.json())
         .then(data => {
-            padData = data;
+            Data = data;
             updateButtonNames();
         })
         .catch(error => console.error('Error loading JSON data:', error));
@@ -36,14 +36,32 @@ document.addEventListener('DOMContentLoaded', function() {
 function editPadName(padNumber) {
     const newValue = document.getElementById(`input-preset-${padNumber}`).value;
     padData.channels.synth1.presets.page1[padNumber - 1] = newValue;
-
     updateButtonNames();
-    // Add logic here to update the display or other elements
+    downloadUpdatedData();
+}
+
+function downloadUpdatedData() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(padData, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "data.json");
+    document.body.appendChild(downloadAnchorNode); // Required for Firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+}
+
+function copyDataToClipboard() {
+    const dataStr = JSON.stringify(Data, null, 2);
+    navigator.clipboard.writeText(dataStr).then(() => {
+        alert("Data copied to clipboard!");
+    }, (err) => {
+        console.error('Could not copy text: ', err);
+    });
     }
 
-function updateButtonNames() {
-    const names = padData.channels[currentChannel][currentMacro][`page${currentPage}`];
 
+function updateButtonNames() {
+    const names = Data.channels[currentChannel][currentMacro][`page${currentPage}`];
     // Update the names for the 32 buttons
     for (let i = 0; i < 32; i++) {
         const buttonId = `pad-${i + 1}`; // IDs are 'pad-1', 'pad-2', etc.
