@@ -8,6 +8,7 @@ let project = 'data_(1).json'
 
 
 
+
 // Load JSON data
 function loadData() {
     fetch(project)
