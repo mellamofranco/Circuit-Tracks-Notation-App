@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Circuit Tracks Notation App</title>
         <script src="script.js" defer></script>
-
         <style>
             body {
                 background-color: #2c363c;
@@ -73,12 +72,16 @@
                 text-align: center;
                 color: white;
             }
+            .selected {
+                border: 2px solid #ffffff; /* or any other style you want for the selected state */
+            }
         </style>
     </head>
     <body>
 
-        <input type="text" id="input-preset-1" value="Preset 1">
-            <button onclick="editPadName(1)">Save</button>
+        <input type="text" id="input-preset">
+        <button onclick="editPadName()">Save name</button>
+           <button onclick="downloadUpdatedData()">Save file</button>
             <button onclick="copyDataToClipboard()">Copy Data</button>
 
         <div class="macros-grid">
@@ -91,14 +94,14 @@
         </div>
     
         <div class="channels-grid">
-                <button class="channel-button">Synth 1</button>
-                <button class="channel-button">Synth 2</button>
-                <button class="channel-button">MIDI 1</button>
-                <button class="channel-button">MIDI 2</button>
-                <button class="channel-button">Drum 1</button>
-                <button class="channel-button">Drum 2</button>
-                <button class="channel-button">Drum 3</button>
-                <button class="channel-button">Drum 4</button>
+                <button class="channel-button" id="channel-synth1" onclick="selectChannel('Synth1')">Synth 1</button>
+                <button class="channel-button" id="channel-synth2" onclick="selectChannel('Synth 2')">Synth 2</button>
+                <button class="channel-button" id="channel-MIDI1" onclick="selectChannel('MIDI1')">MIDI 1</button>
+                <button class="channel-button" id="channel-MIDI2" onclick="selectChannel('MIDI2')">MIDI 2</button>
+                <button class="channel-button" id="channel-Drum1" onclick="selectChannel('Drum1')">Drum 1</button>
+                <button class="channel-button" id="channel-Drum2" onclick="selectChannel('Drum2')">Drum 2</button>
+                <button class="channel-button" id="channel-Drum3" onclick="selectChannel('Drum3')">Drum 3</button>
+                <button class="channel-button" id="channel-Drum4" onclick="selectChannel('Drum4')">Drum 4</button>
         </div>
         <div class="button-grid">
             <!-- Button Grid for Pads -->

@@ -3,14 +3,14 @@ let currentMacro = 'presets'; // Default starting macro
 let currentChannel = 'synth1'; // Default starting channel
 let currentPage = 1; // Default starting page
 let Data = {}; // Object to store JSON data
+let selectedPad = null; // To keep track of the currently selected pad
+let lastChannelClicked = "synth1"; // This will store the last channel clicked
 
-
+//Load json
 fetch('data.json')
   .then(response => response.json())
   .then(data => {
     Data = data;
-    // Now Data contains your JSON data
-    // Implement logic to display this data on your web page
   })
   .catch(error => console.error('Error loading JSON data:', error));
 
@@ -31,17 +31,90 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('nextPageBtn').addEventListener('click', () => setPage(currentPage + 1));
 
     // Add event listeners for channel buttons if needed
+    const channelButtons = document.querySelectorAll('.channel-button');
+    channelButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            selectChannel(this.id.replace('channel-', ''));
+        });
+    }); 
 });
+function selectChannel(channel) {
+    lastChannelClicked = channel; // Should match the keys in Data.channels exactly
+    highlightSelectedChannel(channel); // This function needs to be defined to highlight the selected channel
+}
 
-function editPadName(padNumber) {
-    const newValue = document.getElementById(`input-preset-${padNumber}`).value;
-    padData.channels.synth1.presets.page1[padNumber - 1] = newValue;
+// Call this function when a pad button is clicked
+function selectPad(padNumber) {
+    // Make sure lastChannelClicked is set
+    if (!lastChannelClicked) {
+        console.error('No channel selected');
+        return;
+    }
+    
+    // Make sure the selected channel and macro are valid keys in the Data object
+    if (Data.channels[lastChannelClicked] && Data.channels[lastChannelClicked][currentMacro]) {
+        // Check if the page number is valid
+        if (Data.channels[lastChannelClicked][currentMacro][`page${currentPage}`]) {
+            selectedPad = padNumber;
+            const padName = Data.channels[lastChannelClicked][currentMacro][`page${currentPage}`][padNumber - 1];
+            document.getElementById('input-preset').value = padName;
+        } else {
+            console.error('Invalid page number:', currentPage);
+        }
+    } else {
+        console.error('Invalid channel or macro:', lastChannelClicked, currentMacro);
+    }
+}
+
+// Call this function when the user wants to save the edited name
+function editPadName() {
+    if (selectedPad === null || lastChannelClicked === null) {
+        alert('No pad or channel selected');
+        return;
+    }
+    const newValue = document.getElementById('input-preset').value;
+    Data.channels[lastChannelClicked][currentMacro][`page${currentPage}`][selectedPad - 1] = newValue;
     updateButtonNames();
-    downloadUpdatedData();
+}
+
+function editPadName() {
+    if (selectedPad === null || lastChannelClicked === null) {
+        alert('No pad or channel selected');
+        return;
+    }
+    const newValue = document.getElementById('input-preset').value;
+    Data.channels[lastChannelClicked][currentMacro][`page${currentPage}`][selectedPad - 1] = newValue;
+    updateButtonNames();
+}
+function highlightSelectedChannel(channel) {
+    // Clear existing highlights
+    const channelButtons = document.querySelectorAll('.channel-button');
+    channelButtons.forEach(button => button.classList.remove('highlight'));
+
+    // Highlight the selected channel
+    const selectedButton = document.getElementById('channel-' + channel);
+    if (selectedButton) {
+        selectedButton.classList.add('highlight');
+    }
+}
+
+// This function should be called to update the UI to reflect current data
+function updateButtonNames() {
+    const names = Data.channels[currentChannel][currentMacro][`page${currentPage}`];
+    // Update the names for the pad buttons
+    for (let i = 0; i < names.length; i++) {
+        const buttonId = `pad-${i + 1}`;
+        const button = document.getElementById(buttonId);
+        if (button) {
+            button.textContent = names[i];
+            // Make sure the onclick event is set to call selectPad with the correct number
+            button.onclick = function() { selectPad(i + 1); };
+        }
+    }
 }
 
 function downloadUpdatedData() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(padData, null, 2));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(Data, null, 2));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
     downloadAnchorNode.setAttribute("download", "data.json");
@@ -49,6 +122,7 @@ function downloadUpdatedData() {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
 }
+
 
 function copyDataToClipboard() {
     const dataStr = JSON.stringify(Data, null, 2);
@@ -60,17 +134,6 @@ function copyDataToClipboard() {
     }
 
 
-function updateButtonNames() {
-    const names = Data.channels[currentChannel][currentMacro][`page${currentPage}`];
-    // Update the names for the 32 buttons
-    for (let i = 0; i < 32; i++) {
-        const buttonId = `pad-${i + 1}`; // IDs are 'pad-1', 'pad-2', etc.
-        const button = document.getElementById(buttonId);
-        if (button && names[i]) {
-            button.textContent = names[i];
-        }
-    }
-}
 
 function setMacro(macro) {
     currentMacro = macro;
@@ -84,5 +147,3 @@ function setPage(page) {
         document.getElementById('currentPageDisplay').textContent = `Current page: ${page}`;
     }
 }
-
-// Additional functions for setting the channel can be added here
